@@ -235,8 +235,9 @@ static int fts_dpram_write_pe(u32 saddr, const u8 *buf, u32 len, bool wpram)
 
     packet_number = len / packet_size;
     remainder = len % packet_size;
-    if (remainder > 0)
+    if (remainder > 0) {
 	packet_number++;
+    }
     packet_len = packet_size;
     FTS_INFO("write data, num:%d remainder:%d", packet_number, remainder);
 
@@ -249,10 +250,11 @@ static int fts_dpram_write_pe(u32 saddr, const u8 *buf, u32 len, bool wpram)
 	cmd[3] = BYTE_OFF_0(addr);
 
 	/* last packet */
-	if ((i == (packet_number - 1)) && remainder)
+	if ((i == (packet_number - 1)) && remainder) {
 		packet_len = remainder;
 		cmd[4] = BYTE_OFF_8(packet_len);
 		cmd[5] = BYTE_OFF_0(packet_len);
+    }
 
 	for (j = 0; j < packet_len; j++) {
 		cmd[FTS_CMD_WRITE_LEN + j] = buf[offset + j];
@@ -316,8 +318,9 @@ static int fts_dpram_write(u32 saddr, const u8 *buf, u32 len, bool wpram)
 
     packet_number = len / packet_size;
     remainder = len % packet_size;
-    if (remainder > 0)
+    if (remainder > 0) {
 	packet_number++;
+    }
 	packet_len = packet_size;
 	FTS_INFO("write data, num:%d remainder:%d", packet_number, remainder);
 
@@ -325,8 +328,9 @@ static int fts_dpram_write(u32 saddr, const u8 *buf, u32 len, bool wpram)
 	offset = i * packet_size;
 	addr = saddr + offset + baseaddr;
 	/* last packet */
-	if ((i == (packet_number - 1)) && remainder)
+	if ((i == (packet_number - 1)) && remainder) {
 		packet_len = remainder;
+    }
 
 	/* set pram address */
 	cmd[0] = FTS_ROMBOOT_CMD_SET_PRAM_ADDR;
@@ -470,8 +474,9 @@ static int fts_ecc_check(const u8 *buf, u32 len, u32 ecc_saddr)
 
     for (i = 0; i < packet_number; i++) {
 	/* last packet */
-	if ((i == (packet_number - 1)) && packet_remainder)
+	if ((i == (packet_number - 1)) && packet_remainder){
 		packet_length = packet_remainder;
+    }
 
 		ret = fts_ecc_cal_host(buf + offset, packet_length, &ecc_in_host);
 	if (ret < 0) {

@@ -1158,8 +1158,8 @@ s32 cmdq_mdp_handle_sec_setup(struct cmdqSecDataStruct *secData,
 			 metadata_length);
 		return -ENOMEM;
 	}
-	copy_from_user(p_metadatas, CMDQ_U32_PTR(secData->addrMetadatas),
-		metadata_length);
+	// copy_from_user(p_metadatas, CMDQ_U32_PTR(secData->addrMetadatas),
+	// 	metadata_length);
 	handle->secData.addrMetadatas =
 		(cmdqU32Ptr_t)(unsigned long)p_metadatas;
 	return 0;
