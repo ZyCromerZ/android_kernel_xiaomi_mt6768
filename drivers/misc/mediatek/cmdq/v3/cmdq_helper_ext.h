@@ -110,7 +110,7 @@ do {			\
 	int len = snprintf(dispatchedTag, 50, "CRDISPATCH_KEY:%s", tag); \
 	if (len >= 50) \
 		pr_debug("%s:%d len:%d over 50\n", __func__, __LINE__, len); \
-	pr_warn("[CMDQ][AEE]"string, ##args); \
+	pr_debug("[CMDQ][AEE]"string, ##args); \
 	cmdq_core_save_first_dump("[CMDQ][AEE]"string, ##args); \
 	cmdq_core_turnoff_first_dump(); \
 	aee_kernel_warning_api(__FILE__, __LINE__, \
