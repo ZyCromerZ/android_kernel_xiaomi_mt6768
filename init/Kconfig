@@ -63,6 +63,10 @@ config CROSS_COMPILE
 	  need to set this unless you want the configured kernel build
 	  directory to select the cross-compiler automatically.
 
+config CROSS_COMPILE_ARM32
+	string "Cross-compiler tool prefix"
+	default 'arm-linux-androideabi-'
+
 config COMPILE_TEST
 	bool "Compile also drivers which will not load"
 	depends on !UML
