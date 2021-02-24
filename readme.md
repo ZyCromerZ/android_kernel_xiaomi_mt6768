@@ -9,22 +9,35 @@
     * add wireguard support
 
 # info kernels will come maybe
-* Neutrino-N : 
-    * Underclock CPU Big freq minimal from 850Mhz to 500Mhz
+* QuantumKiller-N: 
+    * Underclock CPU Big cores/cortex-a75 freq minimal from 850Mhz to 500Mhz
     * just normal kernel
+    * 80Hz kernel timefrequency
 
-* Neurtino-X (maybe):
-    * Underclock CPU Big freq minimal from 850Mhz to 500Mhz
-    * Use max GPU freq same as merlin (from 950Mhz to 1Ghz)
-    * maybe for gayming, but idk
-    
-* Neurtino-XT  (maybe again):
-    * Underclock CPU Big freq minimal from 850Mhz to 500Mhz
-    * Use max GPU freq same as merlin (from 950Mhz to 1Ghz)
-    * OC CPU ???
-    * maybe for gayming again, but idk
+* QuantumKiller-L: 
+    * Underclock CPU Big cores/cortex-a75 freq minimal from 850Mhz to 500Mhz
+    * Undervolt CPU
+    * just normal kernel
+    * 100Hz kernel timefrequency
+
+* Neurtino-`code`
+    * CPU and GPU based `code`
+    * higher kernel timefrequency
+
+# Code mean?
+* L = CPU : same as stock kernel
+* H = CPU : overclock | cortex-a55/Little cores=2Ghz | cortex-a75/Big cores=2.2Ghz 
+* X = GPU : same as stock kernel
+* Y = GPU : same as merlin (1.000Mhz) and for lancelot only
+* Z = GPU : Overclock to 1.018Mhz
+
+# example about code
+* Neurtino-LZ
+    * L for Stock CPU frequencies
+    * Z for Overclock GPU to 1.018Mhz
 
 # Notes
 * about compilers? <a href="https://github.com/ZyCromerZ/lancelot/blob/changelogs/about-compiler.md">check here</a>
+* what is STOCK-LMK ALMK SLMK? <a href="https://github.com/ZyCromerZ/lancelot/blob/changelogs/about-lmk.md">check here</a>
 * link download? <a href="https://github.com/ZyCromerZ/lancelot/blob/changelogs/download.md">check here</a>
 * when another kernel is come? idk maybe never
