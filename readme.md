@@ -20,16 +20,17 @@
     * just normal kernel
     * 100Hz kernel timefrequency
 
-* Neurtino-`code`
-    * CPU and GPU based `code`
+* Neutrino-`<CPUCODE><GPUCODE>`
+    * `CPUCODE` for <b>CPU</b> type
+    * `GPUCODE` for <b>GPU</b> type
     * higher kernel timefrequency
 
-# Code mean?
-* L = CPU : same as stock kernel
-* H = CPU : overclock | cortex-a55/Little cores=2Ghz | cortex-a75/Big cores=2.2Ghz 
-* X = GPU : same as stock kernel
-* Y = GPU : same as merlin (1.000Mhz) and for lancelot only
-* Z = GPU : Overclock to 1.018Mhz
+# Detail about CODE things
+* L = <b>CPU</b> : same as stock kernel
+* H = <b>CPU</b> : overclock | cortex-a55/Little cores=2Ghz | cortex-a75/Big cores=2.2Ghz 
+* X = <b>GPU</b> : same as stock kernel
+* Y = <b>GPU</b> : same as merlin (1.000Mhz) and for lancelot only
+* Z = <b>GPU</b> : Overclock to 1.018Mhz
 
 # example about code
 * Neurtino-LZ

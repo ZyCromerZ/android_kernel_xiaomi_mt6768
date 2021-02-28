@@ -16,4 +16,5 @@
     * <a href="https://t.me/SoniDharma">@SoniDharma</a>
     * <a href="https://t.me/SunuWijaya0">@SunuWijaya0</a>
     * <a href="https://t.me/Droidsix ">@Droidsix</a>
+    * <a href="https://t.me/KuroSeinen">@KuroSeinen</a>
     * and all other people test my kernels
