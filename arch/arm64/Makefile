@@ -24,7 +24,13 @@ endif
 
 ifeq ($(CONFIG_ARM64_ERRATUM_843419),y)
   ifeq ($(call ld-option, --fix-cortex-a53-843419),)
-$(warning ld does not support --fix-cortex-a53-843419; kernel may be susceptible to erratum)
+    ifeq ($(call ld-option, --fix-cortex-a53),)
+$(warning ld does not support --fix-cortex-a53-843419 or --fix-cortex-a53; kernel may be susceptible to erratum)
+    else
+# When this option was first introduced, it was called --fix-cortex-a53 in gold.
+# So, let's use that as fall-back if the linker understands it.
+LDFLAGS_vmlinux	+= --fix-cortex-a53
+    endif
   else
     ifeq ($(call gold-ifversion, -lt, 114000000, y), y)
 $(warning This version of GNU gold may generate incorrect code with --fix-cortex-a53-843419;\
