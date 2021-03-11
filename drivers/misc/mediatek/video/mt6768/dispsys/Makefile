@@ -12,6 +12,9 @@
 #
 
 # drivers/dispsys
+ifneq ($(call cc-option,-Wno-stringop-overread),)
+ccflags-y += -Wno-stringop-overread
+endif
 
 ccflags-y += -I$(srctree)/drivers/misc/mediatek/video/include/ \
              -I$(srctree)/drivers/misc/mediatek/video/common/ \

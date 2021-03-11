@@ -449,9 +449,10 @@ static inline int wait_to_do_change_vcore_opp(int core)
 	int retry = 0;
 
 	if (g_func_mask & VFM_NEED_WAIT_VCORE) {
-		if (g_vpu_log_level > Log_STATE_MACHINE)
+		if (g_vpu_log_level > Log_STATE_MACHINE) {
 			LOG_INF("[vpu_%d_0x%x] wait for vcore change now\n",
 				core, g_func_mask);
+		}
 	} else {
 		return ret;
 	}
@@ -547,9 +548,10 @@ static inline int wait_to_do_vpu_running(int core)
 	int retry = 0;
 
 	if (g_func_mask & VFM_NEED_WAIT_VCORE) {
-		if (g_vpu_log_level > Log_STATE_MACHINE)
+		if (g_vpu_log_level > Log_STATE_MACHINE) {
 			LOG_INF("[vpu_%d_0x%x] wait for vpu running now\n",
 			core, g_func_mask);
+		}
 	} else {
 		return ret;
 	}
@@ -1994,8 +1996,9 @@ static void vpu_hw_ion_free_handle(
 		LOG_WRN("[vpu] invalid ion handle(0x%p)!\n", handle);
 		return;
 	}
-	if (g_vpu_log_level > Log_STATE_MACHINE)
+	if (g_vpu_log_level > Log_STATE_MACHINE) {
 		LOG_INF("[vpu] ion_free_handle(0x%p)\n", handle);
+	}
 
 	ion_free(client, handle);
 }

@@ -4834,8 +4834,9 @@ if (bResulst == MTRUE) {
 	}
 
 	spin_unlock(&(DPEInfo.SpinLockIrq[DPE_IRQ_TYPE_INT_DPE_ST]));
-	if (bResulst == MFALSE)
+	if (bResulst == MFALSE) {
 		ConfigDVEFrameByReqIdx(g_DVE_RequestRing.HWProcessIdx);
+	}
 
 		LOG_INF("DVE:bFound:%d, DveWriteIdx:%d, WriteIdx:%d\n",
 		bFound, DveWriteIdx,
