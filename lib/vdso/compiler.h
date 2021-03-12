@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 ARM Limited
+ * Userspace implementations of fallback calls
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -12,20 +12,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Author: Will Deacon <will.deacon@arm.com>
- *
- * This supplies .note.* sections to go into the PT_NOTE inside the vDSO text.
- * Here we can supply some information useful to userland.
  */
 
-#include <linux/uts.h>
-#include <linux/version.h>
-#include <linux/elfnote.h>
-#include <linux/build-salt.h>
+#ifndef __VDSO_COMPILER_H
+#define __VDSO_COMPILER_H
 
-ELFNOTE_START(Linux, 0, "a")
-	.long LINUX_VERSION_CODE
-ELFNOTE_END
+#error	"vdso: Provide architectural overrides such as ARCH_PROVIDES_TIMER,"
+#error	"      DEFINE_FALLBACK and __arch_counter_get or any overrides. eg:"
+#error	"      vdso entry points or compilation time helpers."
 
-BUILD_SALT
+#endif /* __VDSO_COMPILER_H */
