@@ -1,16 +1,13 @@
 # about repo
-* Stock = https://github.com/ZyCromerZ/lancelot/tree/eleven-upstream
-* Stock Mod = https://github.com/ZyCromerZ/lancelot/tree/eleven-upstream-mod
-* Stock Mod + vdso32 changes = https://github.com/ZyCromerZ/lancelot/tree/eleven-upstream-mod-vdso32
-* QuantumKiller-N = https://github.com/ZyCromerZ/lancelot/tree/20210228/qk-n
-* QuantumKiller-L = https://github.com/ZyCromerZ/lancelot/tree/20210228/qk-l
+* Stock = https://github.com/ZyCromerZ/android_kernel_xiaomi_mt6768/tree/eleven-upstream
+* Stock Mod = https://github.com/ZyCromerZ/android_kernel_xiaomi_mt6768/tree/eleven-upstream-mod
 
 # info kernels
 * Stock Mod : 
     * same as stock kernels
     * add TTL support
     * add wireguard support
-
+<!-- 
 * QuantumKiller-N: 
     * Underclock CPU Big cores/cortex-a75 freq minimal from 850Mhz to 500Mhz
     * just normal kernel
@@ -37,10 +34,10 @@
 # example about code
 * Neurtino-LZ
     * L for Stock CPU frequencies
-    * Z for Overclock GPU to 1.018Mhz
+    * Z for Overclock GPU to 1.018Mhz -->
 
 # Notes
-* about compilers? <a href="https://github.com/ZyCromerZ/lancelot/blob/changelogs/about-compiler.md">check here</a>
-* what is STOCK-LMK ALMK SLMK? <a href="https://github.com/ZyCromerZ/lancelot/blob/changelogs/about-lmk.md">check here</a>
-* link download? <a href="https://github.com/ZyCromerZ/lancelot/blob/changelogs/download.md">check here</a>
+* about compilers? <a href="https://github.com/ZyCromerZ/android_kernel_xiaomi_mt6768/blob/changelogs/about-compiler.md">check here</a>
+* what is STOCK-LMK ALMK SLMK? <a href="https://github.com/ZyCromerZ/android_kernel_xiaomi_mt6768/blob/changelogs/about-lmk.md">check here</a>
+* link download? <a href="https://github.com/ZyCromerZ/android_kernel_xiaomi_mt6768/blob/changelogs/download.md">check here</a>
 * what is different between QK and Neutrino? QK only for non oc kernels
