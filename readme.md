@@ -4,12 +4,12 @@
 * Stock Mod 2 = https://github.com/ZyCromerZ/android_kernel_xiaomi_mt6768/tree/eleven-upstream-mod2
 
 # info kernels
-* Stock Mod : 
+* Stock Mod :
     * same as stock kernels
     * add TTL support
     * add wireguard support
     * enabled ThinLTO
-* Stock Mod 2 : 
+* Stock Mod 2 :
     * same as stock kernels
     * add TTL support
     * add wireguard support
