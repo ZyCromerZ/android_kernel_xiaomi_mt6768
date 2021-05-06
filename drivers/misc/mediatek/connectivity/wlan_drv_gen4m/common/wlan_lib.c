@@ -7995,8 +7995,8 @@ uint32_t wlanCfgParse(IN struct ADAPTER *prAdapter,
 				       ppcArgs[0], ppcArgs[1], ucTmp);
 				wlanCfgParseAddEntry(prAdapter, ppcArgs[1],
 						     NULL, ucTmp, NULL);
-				kalMemSet(arcArgv_size, 0, WLAN_CFG_ARGV_MAX);
-				kalMemSet(apcArgv, 0, WLAN_CFG_ARGV_MAX);
+				kalMemSet(arcArgv_size, 0, sizeof(arcArgv_size));
+				kalMemSet(apcArgv, 0, sizeof(apcArgv));
 				i4Nargs = 0;
 				goto exit;
 
@@ -8057,8 +8057,8 @@ uint32_t wlanCfgParse(IN struct ADAPTER *prAdapter,
 				       ppcArgs[0], ppcArgs[1], ucTmp);
 				wlanCfgParseAddEntry(prAdapter, ppcArgs[1],
 						     NULL, ucTmp, NULL);
-				kalMemSet(arcArgv_size, 0, WLAN_CFG_ARGV_MAX);
-				kalMemSet(apcArgv, 0, WLAN_CFG_ARGV_MAX);
+				kalMemSet(arcArgv_size, 0, sizeof(arcArgv_size));
+				kalMemSet(apcArgv, 0, sizeof(apcArgv));
 				i4Nargs = 0;
 				break;
 
@@ -8158,8 +8158,8 @@ uint32_t wlanCfgParse(IN struct ADAPTER *prAdapter,
 			}
 
 #endif
-			kalMemSet(arcArgv_size, 0, WLAN_CFG_ARGV_MAX);
-			kalMemSet(apcArgv, 0, WLAN_CFG_ARGV_MAX);
+			kalMemSet(arcArgv_size, 0, sizeof(arcArgv_size));
+			kalMemSet(apcArgv, 0, sizeof(apcArgv));
 			i4Nargs = 0;
 			break;
 

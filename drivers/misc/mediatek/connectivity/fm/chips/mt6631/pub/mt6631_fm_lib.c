@@ -2228,8 +2228,9 @@ static signed int mt6631_set_desense_list(int opid, unsigned short freq)
         case ADD_DESENSE_CHANNEL:
         {
             while (size) {
-            if (mt6631_scan_dese_list[size - 1] == freq)
-                mt6631_scan_dese_list[size-1] = 0;
+                if (mt6631_scan_dese_list[size - 1] == freq){
+                    mt6631_scan_dese_list[size-1] = 0;
+                }
                 WCN_DBG(FM_NTC| CHIP, "remove desense channel %d \n", freq);
                 return 1;
                 size--;
