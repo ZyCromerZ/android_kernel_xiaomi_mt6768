@@ -645,8 +645,18 @@ int schedutil_set_down_rate_limit_us(int cpu, unsigned int rate_limit_us)
 	}
 
 	tunables = sg_policy->tunables;
-	if(tunables->mode_rate_limit_us == 4) {
+	if (tunables->mode_rate_limit_us == 4){
+		// same as defined
 		rate_limit_us = CONFIG_SCHEDUTIL_DOWN_RATE_LIMIT;
+	} else if (tunables->mode_rate_limit_us == 1) {
+		// battery
+		rate_limit_us = 500;
+	} else if (tunables->mode_rate_limit_us == 2) {
+		// balance
+		rate_limit_us = 1000;
+	} else if (tunables->mode_rate_limit_us == 3) {
+		// performance
+		rate_limit_us = 90000;
 	}
 	tunables->down_rate_limit_us = rate_limit_us;
 	attr_set = &tunables->attr_set;
@@ -688,8 +698,18 @@ int schedutil_set_up_rate_limit_us(int cpu, unsigned int rate_limit_us)
 	}
 
 	tunables = sg_policy->tunables;
-	if(tunables->mode_rate_limit_us == 4) {
+	if (tunables->mode_rate_limit_us == 4){
+		// same as defined
 		rate_limit_us = CONFIG_SCHEDUTIL_UP_RATE_LIMIT;
+	} else if (tunables->mode_rate_limit_us == 1) {
+		// battery
+		rate_limit_us = 90000;
+	} else if (tunables->mode_rate_limit_us == 2) {
+		// balance
+		rate_limit_us = 1000;
+	} else if (tunables->mode_rate_limit_us == 3) {
+		// performance
+		rate_limit_us = 500;
 	}
 	tunables->up_rate_limit_us = rate_limit_us;
 	attr_set = &tunables->attr_set;
