@@ -16,9 +16,9 @@
 
 #include "display_recorder.h"
 #include "ddp_debug.h"
-#ifdef CONFIG_MTK_AEE_FEATURE
+// #ifdef CONFIG_MTK_AEE_FEATURE
 #include "mt-plat/aee.h"
-#endif
+// #endif
 
 #define DISP_LOG_PRINT(level, sub_module, fmt, args...)			\
 	dprec_logger_pr(DPREC_LOGGER_DEBUG, fmt, ##args)
