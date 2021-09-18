@@ -6295,7 +6295,7 @@ SYSCALL_DEFINE0(sched_yield)
 	 * no need to preempt or enable interrupts:
 	 */
 	preempt_disable();
-	rq_unlock(rq, &rf);
+	rq_unlock_irq(rq, &rf);
 	sched_preempt_enable_no_resched();
 
 	schedule();
