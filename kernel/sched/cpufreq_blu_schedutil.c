@@ -31,7 +31,9 @@ static struct cpufreq_governor schedutil_gov;
 unsigned long boosted_cpu_util(int cpu);
 
 void (*cpufreq_notifier_fp)(int cluster_id, unsigned long freq);
+#ifndef CONFIG_CPU_FREQ_GOV_SCHEDUTIL
 EXPORT_SYMBOL(cpufreq_notifier_fp);
+#endif
 
 /* Stub out fast switch routines present on mainline to reduce the backport
  * overhead. */
@@ -595,7 +597,9 @@ int schedutil_set_down_rate_limit_us(int cpu, unsigned int rate_limit_us)
 		cpufreq_cpu_put(policy);
 	return 0;
 }
+#ifndef CONFIG_CPU_FREQ_GOV_SCHEDUTIL
 EXPORT_SYMBOL(schedutil_set_down_rate_limit_us);
+#endif
 
 int schedutil_set_up_rate_limit_us(int cpu, unsigned int rate_limit_us)
 {
@@ -635,7 +639,9 @@ int schedutil_set_up_rate_limit_us(int cpu, unsigned int rate_limit_us)
 		cpufreq_cpu_put(policy);
 	return 0;
 }
+#ifndef CONFIG_CPU_FREQ_GOV_SCHEDUTIL
 EXPORT_SYMBOL(schedutil_set_up_rate_limit_us);
+#endif
 
 static struct governor_attr up_rate_limit_us = __ATTR_RW(up_rate_limit_us);
 static struct governor_attr down_rate_limit_us = __ATTR_RW(down_rate_limit_us);
