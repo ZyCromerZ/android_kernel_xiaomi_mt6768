@@ -171,7 +171,7 @@ int update_schedplus_down_throttle_ns(int kicker, int nsec)
 	cur_schedplus_down_throttle_ns = final_down_thres < 0 ?
 		-1 : final_down_thres;
 
-#ifdef CONFIG_CPU_FREQ_GOV_SCHEDUTIL || defined CONFIG_CPU_FREQ_GOV_BLU_SCHEDUTIL
+#ifdef CONFIG_CPU_FREQ_GOV_SCHEDUTIL
 	if (debug_schedplus_down_throttle_nsec == -1) {
 		if (cur_schedplus_down_throttle_ns >= 0)
 			schedutil_set_down_rate_limit_us(0,
@@ -179,6 +179,28 @@ int update_schedplus_down_throttle_ns(int kicker, int nsec)
 		else
 			schedutil_set_down_rate_limit_us(0,
 				default_schedplus_down_throttle_ns / 1000);
+	}
+#endif
+
+#if defined(CONFIG_CPU_FREQ_GOV_BLU_SCHEDUTIL)
+	if (debug_schedplus_down_throttle_nsec == -1) {
+#if defined(CONFIG_CPUFREQ_HAVE_GOVERNOR_PER_POLICY)
+		if (cur_schedplus_down_throttle_ns >= 0)
+			for (i = 0; i < cluster_num; i++)
+				blu_schedutil_set_down_rate_limit_us(cpu_id[i],
+					cur_schedplus_down_throttle_ns / 1000);
+		else
+			for (i = 0; i < cluster_num; i++)
+				blu_schedutil_set_down_rate_limit_us(cpu_id[i],
+					default_schedplus_down_throttle_ns / 1000);
+#else
+		if (cur_schedplus_down_throttle_ns >= 0)
+			blu_schedutil_set_down_rate_limit_us(0,
+				cur_schedplus_down_throttle_ns / 1000);
+		else
+			blu_schedutil_set_down_rate_limit_us(0,
+				default_schedplus_down_throttle_ns / 1000);
+#endif
 	}
 #endif
 
@@ -223,7 +245,7 @@ int update_schedplus_up_throttle_ns(int kicker, int nsec)
 	cur_schedplus_up_throttle_ns = final_up_thres < 0 ?
 		-1 : final_up_thres;
 
-#ifdef CONFIG_CPU_FREQ_GOV_SCHEDUTIL || defined CONFIG_CPU_FREQ_GOV_BLU_SCHEDUTIL
+#ifdef CONFIG_CPU_FREQ_GOV_SCHEDUTIL
 	if (debug_schedplus_up_throttle_nsec == -1) {
 		if (cur_schedplus_up_throttle_ns >= 0)
 			schedutil_set_up_rate_limit_us(0,
@@ -231,6 +253,29 @@ int update_schedplus_up_throttle_ns(int kicker, int nsec)
 		else
 			schedutil_set_up_rate_limit_us(0,
 				default_schedplus_up_throttle_ns / 1000);
+	}
+#endif
+
+
+#if defined(CONFIG_CPU_FREQ_GOV_BLU_SCHEDUTIL)
+	if (debug_schedplus_up_throttle_nsec == -1) {
+#if defined(CONFIG_CPUFREQ_HAVE_GOVERNOR_PER_POLICY)
+		if (cur_schedplus_up_throttle_ns >= 0)
+			for (i = 0; i < cluster_num; i++)
+				blu_schedutil_set_up_rate_limit_us(cpu_id[i],
+					cur_schedplus_up_throttle_ns / 1000);
+		else
+			for (i = 0; i < cluster_num; i++)
+				blu_schedutil_set_up_rate_limit_us(cpu_id[i],
+					default_schedplus_up_throttle_ns / 1000);
+#else
+		if (cur_schedplus_up_throttle_ns >= 0)
+			blu_schedutil_set_up_rate_limit_us(0,
+				cur_schedplus_up_throttle_ns / 1000);
+		else
+			blu_schedutil_set_up_rate_limit_us(0,
+				default_schedplus_up_throttle_ns / 1000);
+#endif
 	}
 #endif
 
@@ -1134,12 +1179,20 @@ static ssize_t perfmgr_debug_schedplus_down_throttle_proc_write(
 	mutex_lock(&boost_eas);
 	debug_schedplus_down_throttle_nsec = data;
 
-#ifdef CONFIG_CPU_FREQ_GOV_SCHEDUTIL || defined CONFIG_CPU_FREQ_GOV_BLU_SCHEDUTIL
+#ifdef CONFIG_CPU_FREQ_GOV_SCHEDUTIL
 	if (data == -1)
 		schedutil_set_down_rate_limit_us(0,
 			cur_schedplus_down_throttle_ns);
 	else if (data >= 0)
 		schedutil_set_down_rate_limit_us(0, data / 1000);
+#endif
+
+#if defined(CONFIG_CPU_FREQ_GOV_BLU_SCHEDUTIL)
+	if (data == -1)
+		blu_schedutil_set_down_rate_limit_us(0,
+			cur_schedplus_down_throttle_ns);
+	else if (data >= 0)
+		blu_schedutil_set_down_rate_limit_us(0, data / 1000);
 #endif
 
 	mutex_unlock(&boost_eas);
@@ -1193,12 +1246,20 @@ static ssize_t perfmgr_debug_schedplus_up_throttle_proc_write(
 	mutex_lock(&boost_eas);
 	debug_schedplus_up_throttle_nsec = data;
 
-#ifdef CONFIG_CPU_FREQ_GOV_SCHEDUTIL || defined CONFIG_CPU_FREQ_GOV_BLU_SCHEDUTIL
+#ifdef CONFIG_CPU_FREQ_GOV_SCHEDUTIL
 	if (data == -1)
 		schedutil_set_up_rate_limit_us(0,
 			cur_schedplus_up_throttle_ns);
 	else if (data >= 0)
 		schedutil_set_up_rate_limit_us(0, data / 1000);
+#endif
+
+#if defined(CONFIG_CPU_FREQ_GOV_BLU_SCHEDUTIL)
+	if (data == -1)
+		blu_schedutil_set_up_rate_limit_us(0,
+			cur_schedplus_up_throttle_ns);
+	else if (data >= 0)
+		blu_schedutil_set_up_rate_limit_us(0, data / 1000);
 #endif
 
 	mutex_unlock(&boost_eas);

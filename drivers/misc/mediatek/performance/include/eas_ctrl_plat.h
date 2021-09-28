@@ -25,6 +25,12 @@ extern int schedutil_set_down_rate_limit_us(int cpu,
 extern int schedutil_set_up_rate_limit_us(int cpu,
 	unsigned int rate_limit_us);
 
+#ifdef CONFIG_CPU_FREQ_GOV_SCHEDUTIL
+extern int blu_schedutil_set_down_rate_limit_us(int cpu,
+	unsigned int rate_limit_us);
+extern int blu_schedutil_set_up_rate_limit_us(int cpu,
+	unsigned int rate_limit_us);
+#endif
 /* EAS */
 extern int uclamp_min_pct_for_perf_idx(int group_idx, int min_value);
 extern void set_sched_rotation_enable(bool enable);

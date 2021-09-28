@@ -19,20 +19,23 @@
 
 #include <linux/cpufreq.h>
 #include <linux/kthread.h>
-#include <linux/slab.h>
 #include <uapi/linux/sched/types.h>
+#include <linux/slab.h>
+#include <trace/events/power.h>
 #include <trace/events/sched.h>
 
 #include "sched.h"
 #include "tune.h"
 #include "cpufreq_schedutil.h"
 
-static struct cpufreq_governor schedutil_gov;
+static struct cpufreq_governor blu_schedutil_gov;
 unsigned long boosted_cpu_util(int cpu);
 
+#if !defined (CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
 void (*cpufreq_notifier_fp)(int cluster_id, unsigned long freq);
-#ifndef CONFIG_CPU_FREQ_GOV_SCHEDUTIL
 EXPORT_SYMBOL(cpufreq_notifier_fp);
+#else
+extern void (*cpufreq_notifier_fp)(int cid, unsigned long freq);
 #endif
 
 /* Stub out fast switch routines present on mainline to reduce the backport
@@ -104,7 +107,7 @@ static bool sugov_should_update_freq(struct sugov_policy *sg_policy, u64 time)
 
 	struct cpufreq_policy *policy = sg_policy->policy;
 
-	if (policy->governor != &schedutil_gov ||
+	if (policy->governor != &blu_schedutil_gov ||
 		!policy->governor_data)
 		return false;
 
@@ -559,7 +562,7 @@ static ssize_t down_rate_limit_us_store(struct gov_attr_set *attr_set,
 	return count;
 }
 
-int schedutil_set_down_rate_limit_us(int cpu, unsigned int rate_limit_us)
+int blu_schedutil_set_down_rate_limit_us(int cpu, unsigned int rate_limit_us)
 {
 	struct cpufreq_policy *policy;
 	struct sugov_policy *sg_policy;
@@ -570,7 +573,7 @@ int schedutil_set_down_rate_limit_us(int cpu, unsigned int rate_limit_us)
 	if (!policy)
 		return -EINVAL;
 
-	if (policy->governor != &schedutil_gov)
+	if (policy->governor != &blu_schedutil_gov)
 		return -ENOENT;
 
 	mutex_lock(&global_tunables_lock);
@@ -597,11 +600,9 @@ int schedutil_set_down_rate_limit_us(int cpu, unsigned int rate_limit_us)
 		cpufreq_cpu_put(policy);
 	return 0;
 }
-#ifndef CONFIG_CPU_FREQ_GOV_SCHEDUTIL
-EXPORT_SYMBOL(schedutil_set_down_rate_limit_us);
-#endif
+EXPORT_SYMBOL(blu_schedutil_set_down_rate_limit_us);
 
-int schedutil_set_up_rate_limit_us(int cpu, unsigned int rate_limit_us)
+int blu_schedutil_set_up_rate_limit_us(int cpu, unsigned int rate_limit_us)
 {
 	struct cpufreq_policy *policy;
 	struct sugov_policy *sg_policy;
@@ -612,7 +613,7 @@ int schedutil_set_up_rate_limit_us(int cpu, unsigned int rate_limit_us)
 	if (!policy)
 		return -EINVAL;
 
-	if (policy->governor != &schedutil_gov)
+	if (policy->governor != &blu_schedutil_gov)
 		return -ENOENT;
 
 	mutex_lock(&global_tunables_lock);
@@ -639,9 +640,7 @@ int schedutil_set_up_rate_limit_us(int cpu, unsigned int rate_limit_us)
 		cpufreq_cpu_put(policy);
 	return 0;
 }
-#ifndef CONFIG_CPU_FREQ_GOV_SCHEDUTIL
-EXPORT_SYMBOL(schedutil_set_up_rate_limit_us);
-#endif
+EXPORT_SYMBOL(blu_schedutil_set_up_rate_limit_us);
 
 static struct governor_attr up_rate_limit_us = __ATTR_RW(up_rate_limit_us);
 static struct governor_attr down_rate_limit_us = __ATTR_RW(down_rate_limit_us);
@@ -658,8 +657,6 @@ static struct kobj_type sugov_tunables_ktype = {
 };
 
 /********************** cpufreq governor interface *********************/
-
-static struct cpufreq_governor blu_schedutil_gov;
 
 static struct sugov_policy *sugov_policy_alloc(struct cpufreq_policy *policy)
 {

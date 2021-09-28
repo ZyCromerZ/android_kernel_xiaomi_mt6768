@@ -825,7 +825,7 @@ static int __init fpsgo_init(void)
 
 	fpsgo_switch_enable(1);
 
-#ifdef CONFIG_CPU_FREQ_GOV_SCHEDUTIL || defined CONFIG_CPU_FREQ_GOV_BLU_SCHEDUTIL
+#if defined(CONFIG_CPU_FREQ_GOV_SCHEDUTIL) || defined(CONFIG_CPU_FREQ_GOV_BLU_SCHEDUTIL)
 	cpufreq_notifier_fp = fpsgo_notify_cpufreq;
 #endif
 
