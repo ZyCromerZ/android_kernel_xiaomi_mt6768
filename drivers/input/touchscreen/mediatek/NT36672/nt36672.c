@@ -1756,7 +1756,7 @@ static int32_t nvt_ts_probe(struct spi_device *client)
 		NVT_LOG("int_trigger_type=%d\n", ts->int_trigger_type);
 		ts->irq_enabled = true;
 		ret = request_threaded_irq(client->irq, NULL, nvt_ts_work_func,
-				ts->int_trigger_type | IRQF_ONESHOT, NVT_SPI_NAME, ts);
+				ts->int_trigger_type | IRQF_ONESHOT | IRQF_PERF_AFFINE, NVT_SPI_NAME, ts);
 		if (ret != 0) {
 			NVT_ERR("request irq failed. ret=%d\n", ret);
 			goto err_int_request_failed;
@@ -1865,7 +1865,8 @@ static int32_t nvt_ts_probe(struct spi_device *client)
 
 
 	ts->event_wq = alloc_workqueue("nvt-event-queue",
-						WQ_UNBOUND | WQ_HIGHPRI, 1);
+						WQ_HIGHPRI | WQ_UNBOUND | WQ_FREEZABLE |
+			    		WQ_MEM_RECLAIM, 0);	
 	if (!ts->event_wq) {
 		NVT_ERR("ERROR: Cannot create work thread\n");
 		goto err_alloc_event_wq_failed;
