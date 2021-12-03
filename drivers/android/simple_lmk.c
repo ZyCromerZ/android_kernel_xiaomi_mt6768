@@ -13,15 +13,17 @@
 #include <linux/sort.h>
 #include <linux/vmpressure.h>
 #include <uapi/linux/sched/types.h>
+#include <linux/module.h>
 
 /* The minimum number of pages to free per reclaim */
-#define MIN_FREE_PAGES (CONFIG_ANDROID_SIMPLE_LMK_MINFREE * SZ_1M / PAGE_SIZE)
-
+// #define (MIN_FREE_PAGES * SZ_1M / PAGE_SIZE) (CONFIG_ANDROID_SIMPLE_LMK_MINFREE * SZ_1M / PAGE_SIZE)
+int min_free_pages = CONFIG_ANDROID_SIMPLE_LMK_MINFREE;
 /* Kill up to this many victims per reclaim */
 #define MAX_VICTIMS 1024
 
 /* Timeout in jiffies for each reclaim */
-#define RECLAIM_EXPIRES msecs_to_jiffies(CONFIG_ANDROID_SIMPLE_LMK_TIMEOUT_MSEC)
+// #define RECLAIM_EXPIRES msecs_to_jiffies(CONFIG_ANDROID_SIMPLE_LMK_TIMEOUT_MSEC)
+int reclaim_expires = CONFIG_ANDROID_SIMPLE_LMK_TIMEOUT_MSEC;
 
 struct victim_info {
 	struct task_struct *tsk;
@@ -147,7 +149,10 @@ static unsigned long find_victims(int *vindex)
 		     sizeof(*victims), victim_cmp, victim_swap);
 
 		/* Stop when we are out of space or have enough pages found */
-		if (*vindex == MAX_VICTIMS || pages_found >= MIN_FREE_PAGES) {
+		
+		if ( min_free_pages > 512 )
+			min_free_pages = 512;
+		if (*vindex == MAX_VICTIMS || pages_found >= (min_free_pages * SZ_1M / PAGE_SIZE)) {
 			/* Zero out any remaining buckets we didn't touch */
 			if (i > min_adj)
 				memset(&task_bucket[min_adj], 0,
@@ -174,7 +179,9 @@ static int process_victims(int vlen)
 		struct task_struct *vtsk = victim->tsk;
 
 		/* The victim's mm lock is taken in find_victims; release it */
-		if (pages_found >= MIN_FREE_PAGES) {
+		if ( min_free_pages > 512 )
+			min_free_pages = 512;
+		if (pages_found >= (min_free_pages * SZ_1M / PAGE_SIZE)) {
 			task_unlock(vtsk);
 		} else {
 			pages_found += victim->size;
@@ -198,7 +205,9 @@ static void scan_and_kill(void)
 	}
 
 	/* Minimize the number of victims if we found more pages than needed */
-	if (pages_found > MIN_FREE_PAGES) {
+	if ( min_free_pages > 512 )
+		min_free_pages = 512;
+	if (pages_found > (min_free_pages * SZ_1M / PAGE_SIZE)) {
 		/* First round of processing to weed out unneeded victims */
 		nr_to_kill = process_victims(nr_found);
 
@@ -256,7 +265,9 @@ static void scan_and_kill(void)
 	}
 
 	/* Wait until all the victims die or until the timeout is reached */
-	if (!wait_for_completion_timeout(&reclaim_done, RECLAIM_EXPIRES))
+	if ( reclaim_expires > 1000 )
+		reclaim_expires = 1000;
+	if (!wait_for_completion_timeout(&reclaim_done, msecs_to_jiffies(reclaim_expires)))
 		pr_info("Timeout hit waiting for victims to die, proceeding\n");
 
 	/* Clean up for future reclaim invocations */
@@ -342,3 +353,5 @@ static const struct kernel_param_ops simple_lmk_init_ops = {
 #undef MODULE_PARAM_PREFIX
 #define MODULE_PARAM_PREFIX "lowmemorykiller."
 module_param_cb(minfree, &simple_lmk_init_ops, NULL, 0200);
+module_param(min_free_pages, int, 0664);
+module_param(reclaim_expires, int, 0664);
