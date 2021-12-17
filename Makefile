@@ -710,25 +710,15 @@ KBUILD_CFLAGS	+= $(call cc-disable-warning, stringop-overread)
 ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
 KBUILD_CFLAGS   += -Os
 else
-
-ifeq ($(cc-name),clang)
 KBUILD_CFLAGS   += -O3
-else
-KBUILD_CFLAGS   += -O2
-endif
-
 endif
 
 ifeq ($(cc-name),clang)
-KBUILD_CFLAGS	+= $(call cc-option,-mllvm -polly,) \
-		   $(call cc-option,-mllvm -polly-run-dce,) \
-		   $(call cc-option,-mllvm -polly-run-inliner,) \
-		   $(call cc-option,-mllvm -polly-opt-fusion=max,) \
-		   $(call cc-option,-mllvm -polly-opt-isl-arg=--no-schedule-serialize-sccs,) \
-		   $(call cc-option,-mllvm -polly-ast-use-context,) \
-		   $(call cc-option,-mllvm -polly-detect-keep-going,) \
-		   $(call cc-option,-mllvm -polly-vectorizer=stripmine,) \
-		   $(call cc-option,-mllvm -polly-invariant-load-hoisting,)
+KBUILD_CFLAGS   += -mcpu=cortex-a55 -mtune=cortex-a55
+endif
+
+ifeq ($(cc-name),gcc)
+KBUILD_CFLAGS   += -mcpu=cortex-a76.cortex-a55 -mtune=cortex-a76.cortex-a55
 endif
 
 KBUILD_CFLAGS += $(call cc-ifversion, -gt, 0900, \
