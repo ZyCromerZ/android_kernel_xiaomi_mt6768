@@ -2277,7 +2277,7 @@ static int smb1351_set_usbchg_current(struct charger_device *chg_dev, u32 uA)
 {
 	struct smb1351_charger *chip = dev_get_drvdata(&chg_dev->dev);
 	int i, rc = 0;
-	static prev_current = -1;
+	static u32 prev_current = -1;
 	u8 reg = 0, mask = 0;
 	u32 current_ma = uA / 1000;
 
@@ -2480,8 +2480,8 @@ static int smb1351_plug_out(struct charger_device *chg_dev)
 	cancel_delayed_work_sync(&chip->hvdcp_500_mode_check_work);
 	/* Disable SW conn therm Regulation */
 //	rc = smblib_set_sw_conn_therm_regulation(chip, false);
-	if (rc < 0)
-		pr_err("Couldn't stop SW conn therm rc=%d\n", rc);
+	// if (rc < 0)
+	// 	pr_err("Couldn't stop SW conn therm rc=%d\n", rc);
 
 	return 0;
 }
