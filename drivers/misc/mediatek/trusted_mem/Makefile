@@ -13,7 +13,7 @@
 include $(srctree)/drivers/misc/mediatek/trusted_mem/Makefile.configs
 
 # Force strictly compiler check
-ccflags-y += -Werror
+# ccflags-y += -Werror
 
 #==========================================================================
 # Trusted Memory Subsystem Driver

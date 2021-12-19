@@ -19,7 +19,7 @@
 # inconsistent state and crashed.
 KCOV_INSTRUMENT_tz_system.o := n
 
-ccflags-y += -Werror
+# ccflags-y += -Werror
 ccflags-y += -I$(srctree)/drivers/misc/mediatek/include/mt-plat/trustzone
 
 obj-y += tz_module.o
