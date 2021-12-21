@@ -22,6 +22,8 @@
 
 static bool use_input_boost = true;
 module_param(use_input_boost, bool, 0644);
+static bool lock_max_freq = false;
+module_param(lock_max_freq, bool, 0644);
 static unsigned int INPUT_BOOST_DURATION_MS = CONFIG_INPUT_BOOST_DURATION_MS;
 module_param(INPUT_BOOST_DURATION_MS, uint, 0644);
 static unsigned int WAKE_BOOST_DURATION_MS = CONFIG_WAKE_BOOST_DURATION_MS;
@@ -301,6 +303,10 @@ static int cpu_notifier_cb(struct notifier_block *nb, unsigned long action,
 
 	if (action != CPUFREQ_ADJUST)
 		return NOTIFY_OK;
+
+	/* just lock max freq if lock_max_freq is true */
+	if (lock_max_freq)
+		policy->max = get_max_boost_freq(policy);
 
 	/* Unboost when the screen is off */
 	if (test_bit(SCREEN_OFF, &b->state)) {
