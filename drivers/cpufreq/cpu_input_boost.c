@@ -38,6 +38,10 @@ static unsigned int MIN_FREQ_LP = CONFIG_MIN_FREQ_LP;
 module_param(MIN_FREQ_LP, uint, 0644);
 static unsigned int MIN_FREQ_PERF = CONFIG_MIN_FREQ_PERF;
 module_param(MIN_FREQ_PERF, uint, 0644);
+static unsigned int SLEEP_FREQ_LP = CONFIG_SLEEP_FREQ_LP;
+module_param(SLEEP_FREQ_LP, uint, 0644);
+static unsigned int SLEEP_FREQ_PERF = CONFIG_SLEEP_FREQ_PERF;
+module_param(SLEEP_FREQ_PERF, uint, 0644);
 
 #if (!defined(CONFIG_LITTLE_CPU_MASK))
 // for 6c Little
@@ -131,6 +135,24 @@ static unsigned int get_min_freq(struct cpufreq_policy *policy)
 	}
 
 	return max(freq, policy->cpuinfo.min_freq);
+}
+
+static unsigned int get_sleep_freq(struct cpufreq_policy *policy)
+{
+	unsigned int freq;
+	if (!use_input_boost)
+		return policy->min;
+
+	if (cpumask_test_cpu(policy->cpu, cpu_perf_mask)) {
+			freq = SLEEP_FREQ_PERF;
+	}
+	else {
+			freq = SLEEP_FREQ_LP;
+	}
+	if ( freq == 0 )
+		freq = policy->cpuinfo.min_freq;
+
+	return min(freq, policy->cpuinfo.min_freq);
 }
 
 static void update_online_cpu_policy(void)
@@ -282,7 +304,7 @@ static int cpu_notifier_cb(struct notifier_block *nb, unsigned long action,
 
 	/* Unboost when the screen is off */
 	if (test_bit(SCREEN_OFF, &b->state)) {
-		policy->min = get_min_freq(policy);
+		policy->min = get_sleep_freq(policy);
 		return NOTIFY_OK;
 	}
 
