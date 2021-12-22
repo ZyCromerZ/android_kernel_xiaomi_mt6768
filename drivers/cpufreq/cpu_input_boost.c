@@ -40,10 +40,10 @@ static unsigned int __read_mostly min_freq_lp = CONFIG_MIN_FREQ_LP;
 module_param(min_freq_lp, uint, 0644);
 static unsigned int __read_mostly min_freq_hp = CONFIG_MIN_FREQ_PERF;
 module_param(min_freq_hp, uint, 0644);
-static unsigned int __read_mostly sleep_freq_lp = CONFIG_SLEEP_FREQ_LP;
-module_param(sleep_freq_lp, uint, 0644);
-static unsigned int __read_mostly sleep_freq_hp = CONFIG_SLEEP_FREQ_PERF;
-module_param(sleep_freq_hp, uint, 0644);
+static unsigned int __read_mostly idle_freq_lp = CONFIG_IDLE_FREQ_LP;
+module_param(idle_freq_lp, uint, 0644);
+static unsigned int __read_mostly idle_freq_hp = CONFIG_IDLE_FREQ_PERF;
+module_param(idle_freq_hp, uint, 0644);
 
 #if (!defined(CONFIG_LITTLE_CPU_MASK))
 // for 6c Little
@@ -86,8 +86,6 @@ static struct boost_drv boost_drv_g __read_mostly = {
 static unsigned int get_input_boost_freq(struct cpufreq_policy *policy)
 {
 	unsigned int freq;
-	if (enabled == 0)
-		return policy->min;
 
 	if (cpumask_test_cpu(policy->cpu, cpu_perf_mask))
 		freq = max(input_boost_freq_hp, min_freq_hp);
@@ -103,8 +101,6 @@ static unsigned int get_input_boost_freq(struct cpufreq_policy *policy)
 static unsigned int get_max_boost_freq(struct cpufreq_policy *policy)
 {
 	unsigned int freq;
-	if (enabled == 0)
-		return policy->max;
 
 	if (cpumask_test_cpu(policy->cpu, cpu_perf_mask)) {
 		freq = max_boost_freq_hp;
@@ -127,8 +123,6 @@ static unsigned int get_max_boost_freq(struct cpufreq_policy *policy)
 static unsigned int get_min_freq(struct cpufreq_policy *policy)
 {
 	unsigned int freq;
-	if (enabled == 0)
-		return policy->min;
 
 	if (cpumask_test_cpu(policy->cpu, cpu_perf_mask)) {
 			freq = min_freq_hp;
@@ -139,17 +133,15 @@ static unsigned int get_min_freq(struct cpufreq_policy *policy)
 	return max(freq, policy->cpuinfo.min_freq);
 }
 
-static unsigned int get_sleep_freq(struct cpufreq_policy *policy)
+static unsigned int get_idle_freq(struct cpufreq_policy *policy)
 {
 	unsigned int freq;
-	if (enabled == 0)
-		return policy->min;
 
 	if (cpumask_test_cpu(policy->cpu, cpu_perf_mask)) {
-			freq = sleep_freq_hp;
+			freq = idle_freq_hp;
 	}
 	else {
-			freq = sleep_freq_lp;
+			freq = idle_freq_lp;
 	}
 	if ( freq == 0 )
 		freq = policy->cpuinfo.min_freq;
@@ -160,8 +152,6 @@ static unsigned int get_sleep_freq(struct cpufreq_policy *policy)
 static void update_online_cpu_policy(void)
 {
 	unsigned int cpu;
-	if (enabled == 0)
-		return;
 
 	get_online_cpus();
 	for_each_possible_cpu(cpu) {
@@ -177,9 +167,6 @@ static void update_online_cpu_policy(void)
 
 static void __cpu_input_boost_kick(struct boost_drv *b)
 {
-	if (enabled == 0)
-		return;
-
 	if (test_bit(SCREEN_OFF, &b->state) || (input_boost_duration == 0))
 		return;
 
@@ -193,9 +180,6 @@ void cpu_input_boost_kick(void)
 {
 	struct boost_drv *b = &boost_drv_g;
 
-	if (enabled == 0)
-		return;
-
 	__cpu_input_boost_kick(b);
 }
 
@@ -204,9 +188,6 @@ static void __cpu_input_boost_kick_max(struct boost_drv *b,
 {
 	unsigned long boost_jiffies = msecs_to_jiffies(duration_ms);
 	unsigned long curr_expires, new_expires;
-
-	if (enabled == 0)
-		return;
 
 	if (test_bit(SCREEN_OFF, &b->state))
 		return;
@@ -231,9 +212,6 @@ void cpu_input_boost_kick_max(unsigned int duration_ms)
 {
 	struct boost_drv *b = &boost_drv_g;
 
-	if (enabled == 0)
-		return;
-
 	__cpu_input_boost_kick_max(b, duration_ms);
 }
 
@@ -241,9 +219,6 @@ static void input_unboost_worker(struct work_struct *work)
 {
 	struct boost_drv *b = container_of(to_delayed_work(work),
 					   typeof(*b), input_unboost);
-
-	if (enabled == 0)
-		return;
 
 	clear_bit(INPUT_BOOST, &b->state);
 	wake_up(&b->boost_waitq);
@@ -253,9 +228,6 @@ static void max_unboost_worker(struct work_struct *work)
 {
 	struct boost_drv *b = container_of(to_delayed_work(work),
 					   typeof(*b), max_unboost);
-
-	if (enabled == 0)
-		return;
 
 	clear_bit(MAX_BOOST, &b->state);
 	wake_up(&b->boost_waitq);
@@ -268,9 +240,6 @@ static int cpu_thread(void *data)
 	};
 	struct boost_drv *b = data;
 	unsigned long old_state = 0;
-
-	if (enabled == 0)
-		return 0;
 
 	sched_setscheduler_nocheck(current, SCHED_FIFO, &sched_max_rt_prio);
 
@@ -313,7 +282,7 @@ static int cpu_notifier_cb(struct notifier_block *nb, unsigned long action,
 
 	/* Unboost when the screen is off */
 	if (test_bit(SCREEN_OFF, &b->state)) {
-		policy->min = get_sleep_freq(policy);
+		policy->min = get_idle_freq(policy);
 		return NOTIFY_OK;
 	}
 
@@ -338,9 +307,6 @@ static int cpu_notifier_cb(struct notifier_block *nb, unsigned long action,
 static int fb_notifier_cb(struct notifier_block *nb,
 			  unsigned long action, void *data)
 {
-	if (enabled == 0)
-		return NOTIFY_OK;
-
 	struct boost_drv *b = container_of(nb, typeof(*b), fb_notif);
 	int *blank = ((struct fb_event *)data)->data;
 

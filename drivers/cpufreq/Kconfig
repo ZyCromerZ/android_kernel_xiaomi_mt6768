@@ -321,17 +321,17 @@ config MIN_FREQ_PERF
 	help
 	  Min freq to set for hp cluster when boost is over.
 
-config SLEEP_FREQ_LP
+config IDLE_FREQ_LP
 	int "LP cluster min boost to set after screen is off"
 	default "0"
 	help
-	  SLEEP freq to set for lp cluster when screen is off.
+	  Idle freq to set for lp cluster when screen is off.
 
-config SLEEP_FREQ_PERF
+config IDLE_FREQ_PERF
 	int "HP cluster min boost to set after screen is off"
 	default "0"
 	help
-	  SLEEP freq to set for hp cluster when screen is off.
+	  Idle freq to set for hp cluster when screen is off.
 endif
 
 comment "CPU frequency scaling drivers"
