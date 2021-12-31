@@ -267,8 +267,10 @@ static int cpu_notifier_cb(struct notifier_block *nb, unsigned long action,
 	struct boost_drv *b = container_of(nb, typeof(*b), cpu_notif);
 	struct cpufreq_policy *policy = data;
 
-	if (enabled == 0)
+	if (enabled == 0) {
+		policy->min = policy->cpuinfo.min_freq;
 		return NOTIFY_OK;
+	}
 
 	if (enabled > 1)
 		enabled = 1;
