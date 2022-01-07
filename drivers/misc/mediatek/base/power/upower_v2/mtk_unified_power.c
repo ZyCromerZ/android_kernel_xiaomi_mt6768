@@ -358,7 +358,11 @@ static void upower_init_rownum(void)
 static unsigned int eem_is_enabled(void)
 {
 #ifndef EEM_DISABLE
+#ifdef CONFIG_MTK_PTPOD
 	return mt_eem_is_enabled();
+#else
+	return 0;
+#endif
 #else
 	return 0;
 #endif

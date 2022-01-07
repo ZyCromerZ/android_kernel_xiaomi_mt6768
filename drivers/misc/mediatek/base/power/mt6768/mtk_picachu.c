@@ -196,7 +196,7 @@ static void picachu_apply_efuse_to_eem(enum mt_picachu_vproc_id id,
 
 	/* Get the corresponding array index */
 	array_idx = id * NR_EEM_EFUSE_PER_VPROC;
-
+#ifdef CONFIG_MTK_PTPOD
 	for (i = 0; i < NR_EEM_EFUSE_PER_VPROC; i++, array_idx++) {
 
 		if (p->pi_dvtfixed == PICACHU_DVTFIXED_V1 ||
@@ -212,6 +212,7 @@ static void picachu_apply_efuse_to_eem(enum mt_picachu_vproc_id id,
 		eem_set_pi_efuse(*(ctrl_id + array_idx),
 				p->ptp1_efuse[i], p->loo_enabled);
 	}
+#endif
 }
 
 static void dump_picachu_info(struct seq_file *m, struct picachu_info *info)
