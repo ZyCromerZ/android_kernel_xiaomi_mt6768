@@ -755,18 +755,14 @@ static const struct seq_operations proc_pid_maps_op_sultanpid = {
 	.stop	= m_stop,
 	.show	= show_map
 };
-static const struct seq_operations proc_tid_maps_op_sultanpid = {
-	.start	= m_start_pid,
-	.next	= m_next_pid,
-	.stop	= m_stop,
-	.show	= show_tid_map
-};
 
 static int pid_maps_open(struct inode *inode, struct file *file)
 {
-	if (sultan_pid_map)
+	if (sultan_pid) {
 		return do_maps_open(inode, file, &proc_pid_maps_op_sultanpid);
-	else return do_maps_open(inode, file, &proc_pid_maps_op);
+	} else {
+		return do_maps_open(inode, file, &proc_pid_maps_op);
+	}
 }
 
 const struct file_operations proc_pid_maps_operations = {
@@ -1305,9 +1301,21 @@ static const struct seq_operations proc_pid_smaps_op = {
 	.show	= show_smap
 };
 
+static const struct seq_operations proc_pid_smaps_op_sultanpid = {
+	.start	= m_start_pid,
+	.next	= m_next_pid,
+	.stop	= m_stop,
+	.show	= show_smap
+};
+
 static int pid_smaps_open(struct inode *inode, struct file *file)
 {
-	return do_maps_open(inode, file, &proc_pid_smaps_op);
+	if (sultan_pid_smap) {
+		return do_maps_open(inode, file, &proc_pid_smaps_op_sultanpid);
+	} else {
+		return do_maps_open(inode, file, &proc_pid_smaps_op);
+
+	}
 }
 
 static int smaps_rollup_open(struct inode *inode, struct file *file)
@@ -2463,10 +2471,22 @@ static const struct seq_operations proc_pid_numa_maps_op = {
 	.show   = show_numa_map,
 };
 
+static const struct seq_operations proc_pid_numa_maps_op_sultanpid = {
+	.start	= m_start_pid,
+	.next	= m_next_pid,
+	.stop   = m_stop,
+	.show   = show_numa_map,
+};
+
 static int pid_numa_maps_open(struct inode *inode, struct file *file)
 {
-	return proc_maps_open(inode, file, &proc_pid_numa_maps_op,
-				sizeof(struct numa_maps_private));
+	if (sultan_pid_map) {
+		return proc_maps_open(inode, file, &proc_pid_numa_maps_op_sultanpid,
+					sizeof(struct numa_maps_private));
+	} else {
+		return proc_maps_open(inode, file, &proc_pid_numa_maps_op,
+					sizeof(struct numa_maps_private));
+	}
 }
 
 const struct file_operations proc_pid_numa_maps_operations = {

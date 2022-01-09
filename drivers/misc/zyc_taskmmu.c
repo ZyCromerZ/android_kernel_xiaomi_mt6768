@@ -24,20 +24,25 @@ MODULE_AUTHOR("ZyCromerZ");
 MODULE_DESCRIPTION("zyc taskmmu");
 MODULE_VERSION("0.0.1");
 
+bool sultan_pid = false;
+module_param(sultan_pid, bool, 0644);
+
 bool sultan_pid_map = false;
 module_param(sultan_pid_map, bool, 0644);
+
+bool sultan_pid_smap = false;
+module_param(sultan_pid_smap, bool, 0644);
 
 bool sultan_pid_shrink = false;
 module_param(sultan_pid_shrink, bool, 0644);
 
-bool sultan_tid_map = false;
-module_param(sultan_tid_map, bool, 0644);
 
 static int __init prepare_driver_init(void) {
  printk(KERN_INFO "zyc taskmmu initialized");
+ sultan_pid = false;
  sultan_pid_map = false;
  sultan_pid_shrink = false;
- sultan_tid_map = false;
+ sultan_pid_smap = false;
  return 0;
 }
 static void __exit prepare_driver_exit(void) {
