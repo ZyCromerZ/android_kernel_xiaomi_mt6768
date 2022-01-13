@@ -746,7 +746,7 @@ static const struct seq_operations proc_pid_maps_op = {
 	.start	= m_start,
 	.next	= m_next,
 	.stop	= m_stop,
-	.show	= show_pid_map
+	.show	= show_map
 };
 
 static const struct seq_operations proc_pid_maps_op_sultanpid = {
@@ -1098,11 +1098,10 @@ void __weak arch_show_smap(struct seq_file *m, struct vm_area_struct *vma)
 {
 }
 
-static void smap_gather_stats(struct vm_area_struct *vma,
-			     struct mem_size_stats *mss)
 #define SEQ_PUT_DEC(str, val) \
 		seq_put_decimal_ull_width(m, str, (val) >> 10, 8)
-static int show_smap(struct seq_file *m, void *v, int is_pid)
+static void smap_gather_stats(struct vm_area_struct *vma,
+			     struct mem_size_stats *mss)
 {
 	struct mm_walk smaps_walk = {
 		.pmd_entry = smaps_pte_range,
