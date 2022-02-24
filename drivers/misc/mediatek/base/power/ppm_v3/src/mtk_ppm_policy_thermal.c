@@ -49,7 +49,7 @@ void mt_ppm_cpu_thermal_protect(unsigned int limited_power)
 	ppm_lock(&thermal_policy.lock);
 
 	if (!thermal_policy.is_enabled) {
-		ppm_warn("@%s: thermal policy is not enabled!\n", __func__);
+		// ppm_warn("@%s: thermal policy is not enabled!\n", __func__);
 		ppm_unlock(&thermal_policy.lock);
 		goto end;
 	}

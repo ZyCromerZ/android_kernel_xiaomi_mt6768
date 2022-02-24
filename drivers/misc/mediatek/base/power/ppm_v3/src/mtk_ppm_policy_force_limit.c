@@ -129,7 +129,7 @@ unsigned int mt_ppm_forcelimit_cpu_core(unsigned int cluster_num,
 
 	ppm_lock(&forcelimit_policy.lock);
 	if (!forcelimit_policy.is_enabled) {
-		ppm_warn("forcelimit policy is not enabled!\n");
+		// ppm_warn("forcelimit policy is not enabled!\n");
 		ppm_unlock(&forcelimit_policy.lock);
 		return -1;
 	}

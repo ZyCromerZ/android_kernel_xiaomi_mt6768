@@ -107,7 +107,7 @@ void mt_ppm_dlpt_set_limit_by_pbm(unsigned int limited_power)
 	ppm_lock(&dlpt_policy.lock);
 
 	if (!dlpt_policy.is_enabled) {
-		ppm_warn("@%s: dlpt policy is not enabled!\n", __func__);
+		// ppm_warn("@%s: dlpt policy is not enabled!\n", __func__);
 		ppm_unlock(&dlpt_policy.lock);
 		goto end;
 	}

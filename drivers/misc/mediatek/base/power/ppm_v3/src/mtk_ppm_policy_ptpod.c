@@ -43,7 +43,7 @@ void mt_ppm_ptpod_policy_activate(void)
 	ppm_lock(&ptpod_policy.lock);
 
 	if (!ptpod_policy.is_enabled) {
-		ppm_warn("@%s: ptpod policy is not enabled!\n", __func__);
+		// ppm_warn("@%s: ptpod policy is not enabled!\n", __func__);
 		ppm_unlock(&ptpod_policy.lock);
 		goto end;
 	}
